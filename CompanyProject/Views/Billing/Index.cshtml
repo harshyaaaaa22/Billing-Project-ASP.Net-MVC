@@ -1,0 +1,433 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Modern Billing System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="billing-container">
+        <h1 class="page-title animate__animated animate__fadeIn">Billing System</h1>
+
+        <form id="billing-form" class="animate__animated animate__fadeInUp">
+            <div class="card company-section">
+                <div class="card-header">
+                    <h2>Company Details</h2>
+                    <div class="card-indicator"></div>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" name="CompanyName" class="form-control" placeholder="Enter company name" />
+                        </div>
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" name="City" class="form-control" placeholder="Enter city" />
+                        </div>
+                        <div class="form-group">
+                            <label>GST Number</label>
+                            <input type="text" name="GSTNo" class="form-control" placeholder="Enter GST number" />
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Number</label>
+                            <input type="text" name="ContactNo" class="form-control" placeholder="Enter contact number" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card products-section">
+                <div class="card-header">
+                    <h2>Product Details</h2>
+                    <div class="card-indicator"></div>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table id="product-table" class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Code</th>
+                                    <th>Product Name</th>
+                                    <th>HSN</th>
+                                    <th>Quantity</th>
+                                    <th>Rate</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" id="add-row" class="btn btn-primary">
+                            <span class="btn-icon">+</span> Add Product
+                        </button>
+                        <button type="button" id="save-products" class="btn btn-secondary">
+                            <span class="btn-icon">✓</span> Save Products
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card saved-products-section">
+                <div class="card-header">
+                    <h2>Saved Products</h2>
+                    <div class="card-indicator"></div>
+                </div>
+                <div class="card-body">
+                    <div id="saved-products">
+                        <p class="no-products">No products saved yet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="btn btn-success">
+                    <span class="btn-icon">💾</span> Save Billing
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <style>
+        /* Modern Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .billing-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 2.5rem;
+            color: #1a237e;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Card Styling */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            background: #fff;
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .card-indicator {
+            width: 40px;
+            height: 4px;
+            background: #3f51b5;
+            border-radius: 2px;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #546e7a;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3f51b5;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+        }
+
+        /* Table Styling */
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .modern-table th {
+            background: #f5f7fa;
+            color: #2c3e50;
+            font-weight: 600;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #eee;
+        }
+
+        .modern-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modern-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Buttons */
+        .button-group {
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-icon {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: #3f51b5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #303f9f;
+        }
+
+        .btn-secondary {
+            background: #78909c;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #546e7a;
+        }
+
+        .btn-success {
+            background: #43a047;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #388e3c;
+        }
+
+        .btn-danger {
+            background: #e53935;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        /* Submit Section */
+        .submit-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        /* No Products Message */
+        .no-products {
+            text-align: center;
+            color: #78909c;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .billing-container {
+                padding: 0 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .card-header {
+                padding: 1rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let products = [];
+
+            // Add hover effect to cards
+            $('.card').hover(
+                function () { $(this).find('.card-indicator').css('width', '100%'); },
+                function () { $(this).find('.card-indicator').css('width', '40px'); }
+            );
+
+            // Add new row with animation
+            $("#add-row").click(function () {
+                var rowCount = $("#product-table tbody tr").length;
+                var newRow = $(`
+                        <tr class="animate__animated animate__fadeInDown">
+                            <td><input type="text" name="Products[${rowCount}].ProductCode" class="form-control" /></td>
+                            <td><input type="text" name="Products[${rowCount}].ProductName" class="form-control" /></td>
+                            <td><input type="text" name="Products[${rowCount}].ProductHSN" class="form-control" /></td>
+                            <td><input type="number" name="Products[${rowCount}].Qty" class="form-control" /></td>
+                            <td><input type="number" name="Products[${rowCount}].Rate" step="0.01" class="form-control" /></td>
+                            <td>
+                                <button type="button" class="btn btn-danger remove-row">
+                                    <span class="btn-icon">×</span>
+                                </button>
+                            </td>
+                        </tr>
+                    `);
+                $("#product-table tbody").append(newRow);
+            });
+
+            // Remove row with animation
+            $(document).on("click", ".remove-row", function () {
+                $(this).closest("tr")
+                    .addClass('animate__animated animate__fadeOutRight')
+                    .one('animationend', function () {
+                        $(this).remove();
+                    });
+            });
+
+            // Save products with animation
+            $("#save-products").click(function () {
+                products = [];
+                $("#product-table tbody tr").each(function () {
+                    const product = {
+                        ProductCode: $(this).find('input[name$="ProductCode"]').val(),
+                        ProductName: $(this).find('input[name$="ProductName"]').val(),
+                        ProductHSN: $(this).find('input[name$="ProductHSN"]').val(),
+                        Qty: $(this).find('input[name$="Qty"]').val(),
+                        Rate: $(this).find('input[name$="Rate"]').val()
+                    };
+                    products.push(product);
+                });
+
+                displaySavedProducts(products);
+            });
+
+            function displaySavedProducts(products) {
+                const container = $("#saved-products");
+                if (products.length === 0) {
+                    container.html('<p class="no-products">No products saved yet.</p>');
+                    return;
+                }
+
+                let html = `
+                        <table class="modern-table animate__animated animate__fadeIn">
+                            <thead>
+                                <tr>
+                                    <th>Product Code</th>
+                                    <th>Product Name</th>
+                                    <th>HSN</th>
+                                    <th>Qty</th>
+                                    <th>Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                products.forEach(product => {
+                    html += `
+                            <tr>
+                                <td>${product.ProductCode}</td>
+                                <td>${product.ProductName}</td>
+                                <td>${product.ProductHSN}</td>
+                                <td>${product.Qty}</td>
+                                <td>${product.Rate}</td>
+                            </tr>
+                        `;
+                });
+
+                html += '</tbody></table>';
+                container.html(html);
+            }
+
+            // Form validation and submission
+            $("#billing-form").on('submit', function (e) {
+                e.preventDefault();
+                // Add your form submission logic here
+                alert('Form submitted successfully!');
+            });
+        });
+    </script>
+</body>
+</html>
